@@ -1,6 +1,6 @@
-# docker-perl-tester
+# docker-spamassassin-tester fork of docker-perl-tester
 
-This repo is used to build Perl Docker images with various pre-installed bits:
+(From README, needs updating for fork) This repo is used to build Perl Docker images with various pre-installed bits:
 
 - the `aspell` and `aspell-en` packages
 - `cpanminus`
