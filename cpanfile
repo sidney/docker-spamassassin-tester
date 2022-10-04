@@ -1,69 +1,63 @@
 use strict;      # satisfy linter
 use warnings;    # satisfy linter
 
-requires 'App::cpanoutdated';
-requires 'ExtUtils::MakeMaker';
-requires 'File::Temp';
-requires 'List::MoreUtils';
-requires 'Module::Build';
-requires 'Perl::Critic';
-requires 'Perl::Tidy', '>= 20220217';
-requires 'Plack::Test';
-requires 'Pod::Readme' if "$]" >= 5.012000;
-requires 'Software::License::Perl_5';
-requires 'Test2::Bundle::Extended';
-requires 'Test2::Plugin::NoWarnings';
-requires 'Test2::Suite';
-requires 'Test2::Tools::Explain';
-requires 'Test::Builder';
-requires 'Test::CPAN::Meta';
-requires 'Test::Deep';
-requires 'Test::Differences';
-requires 'Test::EOL';
-requires 'Test::Fatal';
-requires 'Test::MinimumVersion';
-requires 'Test::MockModule';
-requires 'Test::Mojibake';
-requires 'Test::More';
-requires 'Test::Needs';
-requires 'Test::NoTabs';
+requires 'Archive::Zip';
+requires 'BSD::Resource';
+requires 'BerkeleyDB';
+requires 'Compress::Zlib';
+requires 'DBI';
+requires 'DB_File';
+requires 'Devel::Cycle';
+requires 'Digest::SHA';
+requires 'Digest::SHA1';
+requires 'Email::Address::XS';
+requires 'Encode::Detect';
+requires 'Encode::Detect::Detector';
+requires 'Geo::IP';
+requires 'GeoIP2';
+requires 'GeoIP2::Database::Reader';
+requires 'Geography::Countries';
+requires 'HTML::Parser';
+requires 'HTTP::Cookies';
+requires 'HTTP::Daemon';
+requires 'HTTP::Date';
+requires 'HTTP::Negotiate';
+requires 'IO::Socket::INET6';
+requires 'IO::Socket::SSL';
+requires 'IO::String';
+requires 'IP::Country';
+requires 'IP::Country::DB_File';
+requires 'LWP::Protocol::https';
+requires 'LWP::UserAgent';
+requires 'Mail::DKIM';
+requires 'Mail::DMARC::PurePerl';
+requires 'Math::Int128';
+requires 'MaxMind::DB::Reader::XS';
+requires 'Net::CIDR::Lite';
+requires 'Net::DNS';
+requires 'Net::DNS::Nameserver';
+requires 'Net::LibIDN';
+requires 'Net::LibIDN2';
+requires 'Net::Patricia';
+requires 'Net::Works::Network';
+requires 'NetAddr::IP';
+requires 'Params::Validate';
+requires 'Razor2::Client::Agent';
+requires 'Sys::Hostname::Long';
 requires 'Test::Perl::Critic';
 requires 'Test::Pod';
 requires 'Test::Pod::Coverage';
-requires 'Test::Portability::Files';
-requires 'Test::RequiresInternet';
-requires 'Test::Simple';
-requires 'Test::Spelling';
-requires 'Test::Synopsis';
-requires 'Test::Version';
-requires 'Test::Warnings';
+requires 'WWW::RobotRules';
+requires 'Text::Diff';
+requires 'Perl::Critic::Policy::Bangs::ProhibitBitwiseOperators';
+requires 'Perl::Critic::Policy::Perlsecret';
+requires 'Perl::Critic::Policy::Compatibility::ProhibitThreeArgumentOpen';
+requires 'Perl::Critic::Policy::Lax::ProhibitStringyEval::ExceptForRequire';
+requires 'Perl::Critic::Policy::ValuesAndExpressions::PreventSQLInjection';
+requires 'Perl::Critic::Policy::ControlStructures::ProhibitReturnInDoBlock';
 
-if ( "$]" >= 5.010 ) {
-    requires 'Devel::Cover';
-    requires 'Devel::Cover::Report::Codecov';
-    requires 'Devel::Cover::Report::Coveralls';
-    requires 'Minilla';
-    requires 'Test::Vars';
+if ( "$]" < 5.017 ) {
+    requires 'Devel::SawAmpersand';
 }
 
-if ( "$]" >= 5.012 ) {
-    requires 'Code::TidyAll::Plugin::SortLines::Naturally';
-    requires 'Code::TidyAll::Plugin::Test::Vars';
-    requires 'Code::TidyAll::Plugin::UniqueLines';
-    requires 'Pod::Coverage::TrustPod';
-}
-
-if ( "$]" >= 5.020 ) {
-    requires 'Dist::Zilla::PluginBundle::Author::ETHER';
-    requires 'Dist::Zilla::PluginBundle::Author::OALDERS';
-    requires 'Dist::Zilla::PluginBundle::DROLSKY';
-    requires 'Dist::Zilla::PluginBundle::Milla';
-    requires 'Dist::Zilla::PluginBundle::RJBS';
-    requires 'Dist::Zilla::Plugin::CopyFilesFromRelease';
-    requires 'Dist::Zilla::Plugin::Git::Contributors';
-    requires 'Dist::Zilla::Plugin::OurPkgVersion';
-    requires 'Dist::Zilla::Plugin::StaticInstall';
-    requires 'Dist::Zilla::Plugin::Test::ReportPrereqs';
-
-    # ...
-}
+# todo figure out how to install Mail::SPF
