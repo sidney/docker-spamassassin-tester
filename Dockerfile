@@ -1,7 +1,6 @@
 ARG BASE
 FROM buildpack-deps:bullseye
 
-COPY *.patch /usr/src/perl/
 WORKDIR /usr/src/perl
 
 RUN true \
