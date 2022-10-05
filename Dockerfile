@@ -1,4 +1,5 @@
 ARG BASE
+ARG DEBIAN_FRONTEND noninteractive
 FROM perl:${BASE}
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
