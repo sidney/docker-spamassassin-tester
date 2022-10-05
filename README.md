@@ -1,16 +1,15 @@
 # docker-spamassassin-tester fork of docker-perl-tester
 
-(From README, needs updating for fork) This repo is used to build Perl Docker images with various pre-installed bits:
+This repo is used to build Perl Docker images with various pre-installed bits required for building and testing SpamAssassin
 
-- the `aspell` and `aspell-en` packages
+- apt packages required for perl module building and for SpamAssassin building and testing
 - `cpanminus`
 - `App::cpm`
-- `Devel::Cover`
-- various testing modules
-- Dist::Zilla with some common plugins (for Perl >= 5.14)
+- dcc and re2c built from source
+- various cpan modules listed below
+- Mail::SPF installed as CPAN module and as application in /usr/local/bin
 
-At this points images are refreshed daily, which could change overtime if it becomes an issue.
-This should guarantee you to test uptodate CPAN stack.
+A cron task updates at a set interval which can be changed.
 
 Note: if one dependency fails to install, this should not impact you as the image would not be published
 on failures.
@@ -19,55 +18,24 @@ on failures.
 
 ## Available on all Perl Versions
 
-- Code::TidyAll::Plugin::SortLines::Naturally
-- Code::TidyAll::Plugin::UniqueLines
-- Devel::Cover
-- Devel::Cover::Report::Codecov
-- Devel::Cover::Report::Coveralls
-- ExtUtils::MakeMaker
-- File::Temp
-- List::MoreUtils
-- Module::Build
-- Pod::Coverage::TrustPod
-- Test2::Bundle::Extended
-- Test2::Plugin::NoWarnings
-- Test2::Suite
-- Test2::Tools::Explain
-- Test::Builder
-- Test::CPAN::Meta
-- Test::Deep
-- Test::Differences
-- Test::EOL
-- Test::Fatal
-- Test::MinimumVersion
-- Test::MockModule
-- Test::Mojibake
-- Test::More
-- Test::Needs
-- Test::Notabs
-- Test::Pod
-- Test::Pod::Coverage
-- Test::Portability::Files
-- Test::RequiresInternet
-- Test::Simple
-- Test::Spelling
-- Test::Synopsis
-- Test::Version
-- Test::Warnings
+Archive::Zip BSD::Resource BerkeleyDB Compress::Zlib DBI DB_File Devel::Cycle
+Digest::SHA Digest::SHA1 Email::Address::XS Encode::Detect Encode::Detect::Detector
+Geo::IP GeoIP2 GeoIP2::Database::Reader Geography::Countries HTML::Parser HTTP::Cookies
+HTTP::Daemon HTTP::Date HTTP::Negotiate IO::Socket::INET6 IO::Socket::SSL IO::String
+IP::Country IP::Country::DB_File LWP::Protocol::https LWP::UserAgent Mail::DKIM
+Mail::DMARC::PurePerl Math::Int128 MaxMind::DB::Reader::XS Net::CIDR::Lite Net::DNS
+Net::DNS::Nameserver Net::LibIDN Net::LibIDN2 Net::Patricia Net::Works::Network NetAddr::IP
+Params::Validate Razor2::Client::Agent Sys::Hostname::Long Test::Perl::Critic Test::Pod
+Test::Pod::Coverage WWW::RobotRules
+Perl::Critic::Policy::Bangs::ProhibitBitwiseOperators Perl::Critic::Policy::Perlsecret
+Perl::Critic::Policy::Compatibility::ProhibitThreeArgumentOpen
+Perl::Critic::Policy::Lax::ProhibitStringyEval::ExceptForRequire
+Perl::Critic::Policy::ValuesAndExpressions::PreventSQLInjection
+Perl::Critic::Policy::ControlStructures::ProhibitReturnInDoBlock
 
-## Only on Perl 5.10 and later
+## Only on Perl 5.16.3 and earlier
 
-- Code::TidyAll::Plugin::Test::Vars
-- Test::Vars
-
-## Only on Perl 5.12 and later
-
-- Pod::Readme
-
-## Only on Perl 5.14 and later
-
-- Dist::Zilla & friends
-- Dist::Zilla::PluginBundle::Author::ETHER
+Devel::SawAmpersand
 
 # Using Docker Images for your projects
 
@@ -88,16 +56,13 @@ The following tags are available from the repository `perldocker/perl-tester`
 5.18
 5.16
 5.14
-5.12
-5.10
-5.8
 ```
 
 # Continuous Integrations
 
 ## Using the images with GitHub Workflow
 
-Here is a sample workflow for Linux running on all Perl version 5.8 to 5.36
+Here is a sample workflow for Linux running on all Perl version 5.14 to 5.36
 You can save the content in `.github/workflow/linux.yml`.
 
 Note: this example is using cpm to install the dependencies from a cpanfile.
@@ -141,9 +106,6 @@ jobs:
           - '5.18'
           - '5.16'
           - '5.14'
-          - '5.12'
-          - '5.10'
-          - '5.8'
 
     container:
       image: perldocker/perl-tester:${{ matrix.perl-version }}
