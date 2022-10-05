@@ -9,9 +9,12 @@ COPY cpanfile /tmp/
 RUN perl -V
 
 RUN apt-get update && apt-get -y install apt-utils && \
-    apt-get dist-upgrade -y && \
-    apt-get -y install build-essential git pyzor razor subversion libdb-dev libdbi-dev libidn11-dev \
-        libidn2-dev libmaxminddb-dev libssl-dev zlib1g-dev poppler-utils tesseract-ocr
+    apt-get dist-upgrade -y
+
+RUN apt-get -y install build-essential git pyzor razor subversion libdb-dev libdbi-dev libidn11-dev \
+    libmaxminddb-dev libssl-dev zlib1g-dev poppler-utils tesseract-ocr
+    
+RUN apt-get -y install libidn2-dev || apt-get -y install libidn11-dev 
 
 RUN cpanm --self-upgrade || \
     ( echo "# Installing cpanminus:"; curl -sL https://cpanmin.us/ | perl - App::cpanminus )
