@@ -6,7 +6,7 @@ WORKDIR /usr/src/perl
 
 RUN true \
     && curl -fL https://www.cpan.org/src/5.0/perl-${BASE}.tar.gz -o perl-${BASE}.tar.gz \
-    && tar --strip-components=1 -xaf perl-${BASE}.tar.xz -C /usr/src/perl \
+    && tar --strip-components=1 -xaf perl-${BASE}.tar.gz -C /usr/src/perl \
     && rm perl-${BASE}.tar.gz \
     && cat *.patch | patch -p1 \
     && gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
