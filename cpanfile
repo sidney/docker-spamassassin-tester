@@ -32,7 +32,6 @@ requires 'LWP::UserAgent';
 requires 'Mail::DKIM';
 requires 'Mail::DMARC::PurePerl';
 requires 'Math::Int128';
-requires 'MaxMind::DB::Reader::XS';
 requires 'Net::CIDR::Lite';
 requires 'Net::DNS';
 requires 'Net::DNS::Nameserver';
@@ -57,6 +56,10 @@ requires 'Perl::Critic::Policy::ControlStructures::ProhibitReturnInDoBlock';
 
 if ( "$]" >= 5.026 ) {
     requires 'Net::LibIDN2';
+}
+
+if ( "$]" >= 5.022 ) {
+    requires 'MaxMind::DB::Reader::XS';
 }
 
 if ( "$]" < 5.017 ) {
