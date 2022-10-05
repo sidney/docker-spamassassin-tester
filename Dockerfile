@@ -33,14 +33,13 @@ RUN echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> ~/.profile
 
 RUN echo 'eval "$(plenv init -)"' >> ~/.profile
 
-RUN export PATH="$HOME/.plenv/bin:$PATH" && \
-    eval "$(plenv init -)"
-
 USER $SA_USER
 
 WORKDIR /home/$SA_USER
 
-RUN plenv install "$BASE" && \
+RUN export PATH="$HOME/.plenv/bin:$PATH" && \
+    eval "$(plenv init -)" && \
+    plenv install "$BASE" && \
     plenv rehash && \
     plenv global "$BASE" && \
     perl -v && \
