@@ -11,6 +11,28 @@ RUN apt-get update && apt-get -y install apt-utils && \
 RUN apt-get -y install sudo build-essential git pyzor razor subversion libdb-dev libdbi-dev libidn11-dev \
     libssl-dev zlib1g-dev poppler-utils tesseract-ocr libmaxminddb-dev libidn2-dev 
 
+WORKDIR /tmp/
+
+# install dcc from source
+RUN wget https://www.dcc-servers.net/dcc/source/dcc.tar.Z && \
+    tar xf dcc.tar.Z && \
+    cd dcc-* && \
+    ./configure --disable-server --disable-dccm --disable-dccifd && \
+    make && \
+    make install
+
+WORKDIR /tmp/
+
+# custom compile re2c because the version installed by Ubuntu is too old
+RUN wget https://github.com/skvadrik/re2c/releases/download/3.0/re2c-3.0.tar.xz && \
+    tar xf re2c-3.0.tar.xz && \
+    cd re2c-3.0 && ./configure && make && make install
+
+WORKDIR /tmp/
+
+RUN git clone https://github.com/perl-actions/ci-perl-tester-helpers.git --depth 1 && \
+    cp ci-perl-tester-helpers/bin/* /usr/local/bin/ && \
+    rm -rf ci-perl-tester-helpers
 ENV SA_USER="satester" \
     PATH="/home/satester/bin:$PATH"
 
@@ -50,37 +72,16 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 COPY cpanfile /tmp/
 
-RUN perl -V
+RUN export PATH="$HOME/.plenv/bin:$PATH" && \
+    eval "$(plenv init -)" && \
+    perl -V && \
+    cpanm -nq App::cpm App::cpanoutdated Carton::Snapshot && \
+    cpm install -g --show-build-log-on-failure --cpanfile /tmp/cpanfile && \
+    cpan-outdated --exclude-core -p | xargs -n1 cpanm
 
-RUN cpanm -nq App::cpm App::cpanoutdated Carton::Snapshot
+RUN export PATH="$HOME/.plenv/bin:$PATH" && \
+    eval "$(plenv init -)" && \
+    cpanm Mail::SPF -n --install-args="--install_path sbin=$HOME/bin" 
 
-RUN cpm install -g --show-build-log-on-failure --cpanfile /tmp/cpanfile
-
-RUN cpan-outdated --exclude-core -p | xargs -n1 cpanm
-
-RUN cpanm Mail::SPF -n --install-args="--install_path sbin=$HOME/bin" 
-
-WORKDIR /tmp/
-
-# install dcc from source
-RUN wget https://www.dcc-servers.net/dcc/source/dcc.tar.Z && \
-    tar xf dcc.tar.Z && \
-    cd dcc-* && \
-    ./configure --disable-server --disable-dccm --disable-dccifd && \
-    make && \
-    make install
-
-WORKDIR /tmp/
-
-# custom compile re2c because the version installed by Ubuntu is too old
-RUN wget https://github.com/skvadrik/re2c/releases/download/3.0/re2c-3.0.tar.xz && \
-    tar xf re2c-3.0.tar.xz && \
-    cd re2c-3.0 && ./configure && make && make install
-
-WORKDIR /tmp/
-
-RUN git clone https://github.com/perl-actions/ci-perl-tester-helpers.git --depth 1 && \
-    cp ci-perl-tester-helpers/bin/* /usr/local/bin/ && \
-    rm -rf ci-perl-tester-helpers
 
 CMD ["/bin/bash"]
