@@ -14,7 +14,7 @@ RUN apt-get -y install sudo build-essential git pyzor razor subversion libdb-dev
 ENV SA_USER="satester" \
     PATH="/home/satester/bin:$PATH"
 
-RUN useradd -G sudo "$SA_USER" && \
+RUN useradd -G sudo -m -s /bin/bash "$SA_USER" && \
     sed -i /etc/sudoers -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g' && \
     sed -i /etc/sudoers -re 's/^root.*/root ALL=(ALL:ALL) NOPASSWD: ALL/g' && \
     sed -i /etc/sudoers -re 's/^#includedir.*/## **Removed the include directive** ##"/g' && \
