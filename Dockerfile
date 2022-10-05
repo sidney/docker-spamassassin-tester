@@ -7,7 +7,7 @@ COPY cpanfile /tmp/
 
 RUN perl -V
 
-RUN apt-get update && \
+RUN apt-get update && apt-get -y install apt-utils && \
     apt-get dist-upgrade -y && \
     apt-get -y install build-essential git pyzor razor subversion libdb-dev libdbi-dev libidn11-dev \
         libidn2-dev libmaxminddb-dev libssl-dev zlib1g-dev poppler-utils tesseract-ocr
