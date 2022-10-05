@@ -23,8 +23,8 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_GITHUB_TOKEN }}
           dockerfile: Dockerfile
-          buildargs: BASE=latest
-          tags: "latest"
+          buildargs: BASE=bullseye
+          tags: "latest,bullseye"
 
   build:
     name: "Build versions"
@@ -56,5 +56,5 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_GITHUB_TOKEN }}
           dockerfile: Dockerfile
-          buildargs: BASE=${{ matrix.perl-version }}
+          buildargs: BASE=${{ matrix.perl-version }}-bullseye
           tags: "${{ matrix.perl-version }}"
