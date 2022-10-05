@@ -11,21 +11,6 @@ on:
 
 jobs:
 
-  latest-build:
-    name: "Build latest"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@v4
-        with:
-          name: ${{ secrets.DOCKER_REPO }}
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_GITHUB_TOKEN }}
-          dockerfile: Dockerfile
-          buildargs: BASE=bullseye
-          tags: "latest,bullseye"
-
   build:
     name: "Build versions"
     runs-on: ubuntu-latest
@@ -34,18 +19,18 @@ jobs:
       fail-fast: false
       matrix:
         perl-version:
-          - "5.36"
-          - "5.34"
-          - "5.32"
-          - "5.30"
-          - "5.28"
-          - "5.26"
-          - "5.24"
-          - "5.22"
-          - "5.20"
-          - "5.18"
-          - "5.16"
-          - "5.14"
+          - "5.36.0"
+          - "5.34.1"
+          - "5.32.1"
+          - "5.30.3"
+          - "5.28.3"
+          - "5.26.3"
+          - "5.24.4"
+          - "5.22.4"
+          - "5.20.3"
+          - "5.18.4"
+          - "5.16.3"
+          - "5.14.4"
 
     steps:
       - uses: actions/checkout@v3
@@ -56,5 +41,5 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_GITHUB_TOKEN }}
           dockerfile: Dockerfile
-          buildargs: BASE=${{ matrix.perl-version }}-bullseye
+          buildargs: BASE=${{ matrix.perl-version }}
           tags: "${{ matrix.perl-version }}"
