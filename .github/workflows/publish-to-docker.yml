@@ -23,7 +23,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_GITHUB_TOKEN }}
           dockerfile: Dockerfile
-          #buildargs: BASE=bullseye
+          buildargs: BASE=latest
           tags: "latest"
 
   build:
