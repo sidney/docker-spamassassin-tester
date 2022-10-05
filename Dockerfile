@@ -1,5 +1,6 @@
 ARG BASE
 FROM buildpack-deps:bullseye
+ARG BASE
 
 WORKDIR /usr/src/perl
 
