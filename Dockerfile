@@ -5,9 +5,9 @@ ARG BASE
 WORKDIR /usr/src/perl
 
 RUN true \
-    && curl -fL https://www.cpan.org/src/5.0/perl-${BASE}.tar.xz -o perl-${BASE}.tar.xz \
+    && curl -fL https://www.cpan.org/src/5.0/perl-${BASE}.tar.gz -o perl-${BASE}.tar.gz \
     && tar --strip-components=1 -xaf perl-${BASE}.tar.xz -C /usr/src/perl \
-    && rm perl-${BASE}.tar.xz \
+    && rm perl-${BASE}.tar.gz \
     && cat *.patch | patch -p1 \
     && gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
     && archBits="$(dpkg-architecture --query DEB_BUILD_ARCH_BITS)" \
@@ -31,7 +31,7 @@ RUN true \
 
 WORKDIR /
 
-CMD ["perl5.36.0","-de0"]
+CMD ["perl${BASE}","-de0"]
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
