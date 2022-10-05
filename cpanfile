@@ -37,7 +37,6 @@ requires 'Net::CIDR::Lite';
 requires 'Net::DNS';
 requires 'Net::DNS::Nameserver';
 requires 'Net::LibIDN';
-requires 'Net::LibIDN2';
 requires 'Net::Patricia';
 requires 'Net::Works::Network';
 requires 'NetAddr::IP';
@@ -56,8 +55,10 @@ requires 'Perl::Critic::Policy::Lax::ProhibitStringyEval::ExceptForRequire';
 requires 'Perl::Critic::Policy::ValuesAndExpressions::PreventSQLInjection';
 requires 'Perl::Critic::Policy::ControlStructures::ProhibitReturnInDoBlock';
 
+if ( "$]" >= 5.026 ) {
+    requires 'Net::LibIDN2';
+}
+
 if ( "$]" < 5.017 ) {
     requires 'Devel::SawAmpersand';
 }
-
-# todo figure out how to install Mail::SPF
