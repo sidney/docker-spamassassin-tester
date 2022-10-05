@@ -30,6 +30,7 @@ RUN git clone https://github.com/tokuhirom/plenv.git ~/.plenv && \
 git clone https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/
 
 RUN echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> ~/.profile
+ENV PATH="/home.satester/.plenv/bin:$PATH"
 
 RUN echo 'eval "$(plenv init -)"' >> ~/.profile
 
@@ -50,10 +51,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY cpanfile /tmp/
 
 RUN perl -V
-
-
-RUN cpanm --self-upgrade || \
-    ( echo "# Installing cpanminus:"; curl -sL https://cpanmin.us/ | perl - App::cpanminus )
 
 RUN cpanm -nq App::cpm App::cpanoutdated Carton::Snapshot
 
