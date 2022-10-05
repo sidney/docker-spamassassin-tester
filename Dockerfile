@@ -15,7 +15,7 @@ RUN apt-get update && \
 RUN cpanm --self-upgrade || \
     ( echo "# Installing cpanminus:"; curl -sL https://cpanmin.us/ | perl - App::cpanminus )
 
-RUN cpanm -nq App::cpm Carton::Snapshot
+RUN cpanm -nq App::cpm App::cpanoutdated Carton::Snapshot
 
 RUN cpm install -g --show-build-log-on-failure --cpanfile /tmp/cpanfile
 
