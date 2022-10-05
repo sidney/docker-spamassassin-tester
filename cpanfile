@@ -53,14 +53,8 @@ requires 'Perl::Critic::Policy::Compatibility::ProhibitThreeArgumentOpen';
 requires 'Perl::Critic::Policy::Lax::ProhibitStringyEval::ExceptForRequire';
 requires 'Perl::Critic::Policy::ValuesAndExpressions::PreventSQLInjection';
 requires 'Perl::Critic::Policy::ControlStructures::ProhibitReturnInDoBlock';
-
-if ( "$]" >= 5.026 ) {
-    requires 'Net::LibIDN2';
-}
-
-if ( "$]" >= 5.022 ) {
-    requires 'MaxMind::DB::Reader::XS';
-}
+requires 'Net::LibIDN2';
+requires 'MaxMind::DB::Reader::XS';
 
 if ( "$]" < 5.017 ) {
     requires 'Devel::SawAmpersand';
