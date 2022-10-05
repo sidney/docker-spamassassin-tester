@@ -14,7 +14,14 @@ RUN apt-get -y install sudo build-essential git pyzor razor subversion libdb-dev
 ENV SA_USER="satester" \
     PATH="/home/satester/bin:$PATH"
 
-RUN adduser -G sudo "$SA_USER"
+RUN useradd -G sudo "$SA_USER" && \
+    sed -i /etc/sudoers -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g' && \
+    sed -i /etc/sudoers -re 's/^root.*/root ALL=(ALL:ALL) NOPASSWD: ALL/g' && \
+    sed -i /etc/sudoers -re 's/^#includedir.*/## **Removed the include directive** ##"/g' && \
+    echo "$SA_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo "Customized the sudoers file for passwordless access to the $SA_USER user!" && \
+    echo "$SA_USER user:";  su - $SA_USER -c id
+
 
 WORKDIR /home/satester
 USER $SA_USER
