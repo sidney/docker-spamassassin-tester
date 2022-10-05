@@ -39,7 +39,7 @@ Devel::SawAmpersand
 
 # Using Docker Images for your projects
 
-The images can be found at [https://hub.docker.com/repository/docker/perldocker/perl-tester/](https://hub.docker.com/repository/docker/perldocker/perl-tester/)
+The images can be found at [https://hub.docker.com/r/sidney1310/spamassassin-tester/](https://hub.docker.com/r/sidney1310/spamassassin-tester/)
 
 The following tags are available from the repository `perldocker/perl-tester`
 
