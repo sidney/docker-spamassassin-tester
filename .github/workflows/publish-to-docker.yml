@@ -17,14 +17,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@3.04
+        uses: elgohr/Publish-Docker-Github-Action@v4
         with:
           name: ${{ secrets.DOCKER_REPO }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_GITHUB_TOKEN }}
           dockerfile: Dockerfile
-          buildargs: BASE=buster
-          tags: "latest,buster"
+          #buildargs: BASE=bullseye
+          tags: "latest"
 
   build:
     name: "Build versions"
@@ -50,11 +50,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@3.04
+        uses: elgohr/Publish-Docker-Github-Action@v4
         with:
           name: ${{ secrets.DOCKER_REPO }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_GITHUB_TOKEN }}
           dockerfile: Dockerfile
-          buildargs: BASE=${{ matrix.perl-version }}-buster
+          buildargs: BASE=${{ matrix.perl-version }}
           tags: "${{ matrix.perl-version }}"
