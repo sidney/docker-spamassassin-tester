@@ -2,36 +2,42 @@ ARG BASE
 FROM buildpack-deps:bullseye
 ARG BASE
 
-WORKDIR /usr/src/perl
+LABEL maintainer="Sidney Markowitz"
+LABEL repository="https://github.com/sidney/docker-spamassassin-tester"
 
-RUN true \
-    && curl -fL https://www.cpan.org/src/5.0/perl-${BASE}.tar.gz -o perl-${BASE}.tar.gz \
-    && tar --strip-components=1 -xaf perl-${BASE}.tar.gz -C /usr/src/perl \
-    && rm perl-${BASE}.tar.gz \
-    && cat *.patch | patch -p1 \
-    && gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
-    && archBits="$(dpkg-architecture --query DEB_BUILD_ARCH_BITS)" \
-    && archFlag="$([ "$archBits" = '64' ] && echo '-Duse64bitall' || echo '-Duse64bitint')" \
-    && ./Configure -Darchname="$gnuArch" "$archFlag" -Duseshrplib -Dvendorprefix=/usr/local  -des \
-    && make -j$(nproc) \
-    && TEST_JOBS=$(nproc) make test_harness \
-    && make install \
-    && cd /usr/src \
-    && curl -fLO https://www.cpan.org/authors/id/M/MI/MIYAGAWA/App-cpanminus-1.7046.tar.gz \
-    && echo '3e8c9d9b44a7348f9acc917163dbfc15bd5ea72501492cea3a35b346440ff862 *App-cpanminus-1.7046.tar.gz' | sha256sum --strict --check - \
-    && tar -xzf App-cpanminus-1.7046.tar.gz && cd App-cpanminus-1.7046 && perl bin/cpanm . && cd /root \
-    && cpanm IO::Socket::SSL \
-    && curl -fL https://raw.githubusercontent.com/skaji/cpm/0.997011/cpm -o /usr/local/bin/cpm \
-    # sha256 checksum is from docker-perl team, cf https://github.com/docker-library/official-images/pull/12612#issuecomment-1158288299
-    && echo '7dee2176a450a8be3a6b9b91dac603a0c3a7e807042626d3fe6c93d843f75610 */usr/local/bin/cpm' | sha256sum --strict --check - \
-    && chmod +x /usr/local/bin/cpm \
-    && true \
-    && rm -fr /root/.cpanm /usr/src/perl /usr/src/App-cpanminus-1.7046* /tmp/* \
-    && cpanm --version && cpm --version
+RUN apt-get update && apt-get -y install apt-utils && \
+    apt-get dist-upgrade -y
 
-WORKDIR /
+RUN apt-get -y install sudo build-essential git pyzor razor subversion libdb-dev libdbi-dev libidn11-dev \
+    libssl-dev zlib1g-dev poppler-utils tesseract-ocr libmaxminddb-dev libidn2-dev 
 
-CMD ["perl${BASE}","-de0"]
+ENV SA_USER="satester" \
+    PATH="/home/satester/bin:$PATH"
+
+RUN adduser -G sudo "$SA_USER"
+
+WORKDIR /home/satester
+USER $SA_USER
+
+RUN git clone https://github.com/tokuhirom/plenv.git ~/.plenv && \
+git clone https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/
+
+RUN echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> ~/.profile
+
+RUN echo 'eval "$(plenv init -)"' >> ~/.profile
+
+RUN export PATH="$HOME/.plenv/bin:$PATH" && \
+    eval "$(plenv init -)"
+
+USER $SA_USER
+
+WORKDIR /home/$SA_USER
+
+RUN plenv install "$BASE" && \
+    plenv rehash && \
+    plenv global "$BASE" && \
+    perl -v && \
+    plenv install-cpanm
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -39,15 +45,6 @@ COPY cpanfile /tmp/
 
 RUN perl -V
 
-RUN apt-get update && apt-get -y install apt-utils && \
-    apt-get dist-upgrade -y
-
-RUN apt-get -y install build-essential git pyzor razor subversion libdb-dev libdbi-dev libidn11-dev \
-    libssl-dev zlib1g-dev poppler-utils tesseract-ocr
-    
-RUN apt-get -y install libmaxminddb-dev || /bin/true 
-
-RUN apt-get -y install libidn2-dev || /bin/true 
 
 RUN cpanm --self-upgrade || \
     ( echo "# Installing cpanminus:"; curl -sL https://cpanmin.us/ | perl - App::cpanminus )
@@ -58,7 +55,7 @@ RUN cpm install -g --show-build-log-on-failure --cpanfile /tmp/cpanfile
 
 RUN cpan-outdated --exclude-core -p | xargs -n1 cpanm
 
-RUN cpanm Mail::SPF -n --install-args="--install_path sbin=/usr/local/bin" 
+RUN cpanm Mail::SPF -n --install-args="--install_path sbin=$HOME/bin" 
 
 WORKDIR /tmp/
 
