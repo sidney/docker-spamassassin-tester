@@ -14,19 +14,26 @@ RUN \
             -Path 'C:\Temp' \
             -ItemType Directory \
             -Verbose | Out-Null ; \
-    } ; \
-    \   
+    }
+   
+RUN \
     Invoke-WebRequest \
         -Uri "http://strawberryperl.com/download/$ENV:PERL_VERSION/strawberry-perl-$ENV:PERL_VERSION-64bit.zip" \
         -OutFile "C:\\Temp\\strawberry-perl-$ENV:PERL_VERSION-64bit.zip" \
         -UseBasicParsing \
-        -Verbose ; \
-    \
+        -Verbose
+
+RUN Get-ChildItem -Path "C:\\Temp"
+
+RUN \
     Expand-Archive \
         -Path "C:\\Temp\\strawberry-perl-$ENV:PERL_VERSION-64bit.zip" \
         -DestinationPath 'C:\Strawberry' \
-        -Verbose ; \
-    \
+        -Verbose
+
+RUN Get-ChildItem -Path "C:\\Strawberry"
+
+RUN \
     Set-ItemProperty \
         -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment' \
         -Name 'Path' \
