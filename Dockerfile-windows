@@ -1,0 +1,50 @@
+ARG PERL_VERSION
+FROM microsoft/nanoserver:latest
+ARG PERL_VERSION
+
+LABEL maintainer="Sidney Markowitz"
+LABEL repository="https://github.com/sidney/docker-spamassassin-tester"
+
+SHELL ["powershell", "-Command"]
+
+RUN \
+    if(!(Test-Path -Path 'C:\Temp')) \
+    { \
+        New-Item \
+            -Path 'C:\Temp' \
+            -ItemType Directory \
+            -Verbose | Out-Null ; \
+    } ; \
+    \   
+    Invoke-WebRequest \
+        -Uri "http://strawberryperl.com/download/$ENV:PERL_VERSION/strawberry-perl-$ENV:PERL_VERSION-64bit.zip" \
+        -OutFile "C:\\Temp\\strawberry-perl-$ENV:PERL_VERSION-64bit.zip" \
+        -UseBasicParsing \
+        -Verbose ; \
+    \
+    Expand-Archive \
+        -Path "C:\\Temp\\strawberry-perl-$ENV:PERL_VERSION-64bit.zip" \
+        -DestinationPath 'C:\Strawberry' \
+        -Verbose ; \
+    \
+    Set-ItemProperty \
+        -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment' \
+        -Name 'Path' \
+        -Value $($ENV:Path + ';C:\Strawberry\perl\bin;C:\Strawberry\perl\site\bin;C:\Strawberry\c\bin') \
+        -Verbose ;
+
+# Test application
+RUN perl -v
+
+# SHELL ["cmd", "/S", "/C"]
+
+COPY cpanfile "C:\Temp\"
+
+RUN \
+    cpanm -nq App::cpm Carton::Snapshot && \
+    cpm install -g --show-build-log-on-failure --cpanfile /Temp/cpanfile
+
+# Remove temporary items from the build image
+RUN powershell -command Remove-Item -Path 'C:\Temp' -Recurse -Verbose
+
+CMD ["cmd.exe"]
