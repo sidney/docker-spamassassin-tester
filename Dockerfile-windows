@@ -1,5 +1,5 @@
 ARG PERL_VERSION
-FROM microsoft/nanoserver:latest
+FROM mcr.microsoft.com/windows/nanoserver:latest
 ARG PERL_VERSION
 
 LABEL maintainer="Sidney Markowitz"
