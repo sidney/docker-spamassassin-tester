@@ -39,8 +39,12 @@ RUN git clone https://github.com/perl-actions/ci-perl-tester-helpers.git --depth
     cp ci-perl-tester-helpers/bin/* /usr/local/bin/ && \
     rm -rf ci-perl-tester-helpers
 ENV SA_USER="satester"
+ENV SA_USER="satester" \
+    SA_HOME="/home/satester" \
+    HOME="/home/satester" \
+    PATH="/home/satester/bin:$PATH"
 
-RUN useradd -G sudo -u 1001 -m -s /bin/bash "$SA_USER" && \
+RUN useradd -G sudo -u 1001 -d "$SA_HOME" -m -s /bin/bash "$SA_USER" && \
     sed -i /etc/sudoers -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g' && \
     sed -i /etc/sudoers -re 's/^root.*/root ALL=(ALL:ALL) NOPASSWD: ALL/g' && \
     sed -i /etc/sudoers -re 's/^#includedir.*/## **Removed the include directive** ##"/g' && \
@@ -49,10 +53,11 @@ RUN useradd -G sudo -u 1001 -m -s /bin/bash "$SA_USER" && \
     echo "$SA_USER user:";  su - $SA_USER -c id
 
 USER $SA_USER
+WORKDIR $SA_HOME
 
 RUN razor-admin -create && razor-admin -register
 
-RUN cd $HOME && git clone https://github.com/tokuhirom/plenv.git ~/.plenv && \
+RUN git clone https://github.com/tokuhirom/plenv.git ~/.plenv && \
 git clone https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/
 
 RUN echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> $HOME/.profile
@@ -68,7 +73,7 @@ RUN export PATH="$HOME/.plenv/bin:$PATH" && \
     perl -v && \
     plenv install-cpanm
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+SHELL ["/bin/bash", "-ilo", "pipefail", "-c"]
 
 COPY cpanfile /tmp/
 
@@ -84,4 +89,4 @@ RUN export PATH="$HOME/.plenv/bin:$PATH" && \
     cpanm Mail::SPF -n --install-args="--install_path sbin=$HOME/bin" 
 
 
-CMD ["/bin/bash"]
+CMD ["/bin/bash", "-ilo", "pipefail"]
