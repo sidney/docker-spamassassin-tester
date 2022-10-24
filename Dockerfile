@@ -19,7 +19,7 @@ RUN apt-get -y install sudo build-essential curl cpanminus git pyzor razor subve
 WORKDIR /tmp/
 
 # install dcc from source
-RUN wget https://www.dcc-servers.net/dcc/source/dcc.tar.Z && \
+RUN curl -s -o dcc.tar.Z https://www.dcc-servers.net/dcc/source/dcc.tar.Z && \
     tar xf dcc.tar.Z && \
     cd dcc-* && \
     ./configure --disable-server --disable-dccm --disable-dccifd && \
@@ -29,7 +29,7 @@ RUN wget https://www.dcc-servers.net/dcc/source/dcc.tar.Z && \
 WORKDIR /tmp/
 
 # custom compile re2c because the version installed by Ubuntu is too old
-RUN wget https://github.com/skvadrik/re2c/releases/download/3.0/re2c-3.0.tar.xz && \
+RUN curl -s -o re2c-3.0.tar.xz https://github.com/skvadrik/re2c/releases/download/3.0/re2c-3.0.tar.xz && \
     tar xf re2c-3.0.tar.xz && \
     cd re2c-3.0 && ./configure && make && make install
 
