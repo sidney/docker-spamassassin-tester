@@ -65,9 +65,10 @@ RUN echo 'eval "$(plenv init -)"' >> ~/.profile
 
 RUN export PATH="$HOME/.plenv/bin:$PATH" && \
     eval "$(plenv init -)" && \
-    plenv install "$BASE" && \
+    perlversion=$(plenv install --list | grep -m 1 -o "${BASE}..") && \
+    plenv install "$perlversion" && \
     plenv rehash && \
-    plenv global "$BASE" && \
+    plenv global "$perlversion" && \
     perl -v && \
     plenv install-cpanm
 
