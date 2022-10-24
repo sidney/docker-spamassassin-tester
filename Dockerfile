@@ -59,7 +59,7 @@ RUN git clone https://github.com/tokuhirom/plenv.git ~/.plenv && \
 git clone https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/
 
 RUN echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> ~/.profile
-ENV PATH="/home.satester/.plenv/bin:$PATH"
+ENV PATH="/home/satester/.plenv/bin:$PATH"
 
 RUN echo 'eval "$(plenv init -)"' >> ~/.profile
 
