@@ -38,8 +38,7 @@ WORKDIR /tmp/
 RUN git clone https://github.com/perl-actions/ci-perl-tester-helpers.git --depth 1 && \
     cp ci-perl-tester-helpers/bin/* /usr/local/bin/ && \
     rm -rf ci-perl-tester-helpers
-ENV SA_USER="satester" \
-    PATH="/home/satester/bin:$PATH"
+ENV SA_USER="satester"
 
 RUN useradd -G sudo -u 1001 -m -s /bin/bash "$SA_USER" && \
     sed -i /etc/sudoers -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g' && \
@@ -49,19 +48,16 @@ RUN useradd -G sudo -u 1001 -m -s /bin/bash "$SA_USER" && \
     echo "Customized the sudoers file for passwordless access to the $SA_USER user!" && \
     echo "$SA_USER user:";  su - $SA_USER -c id
 
-
-WORKDIR /home/$SA_USER
 USER $SA_USER
 
 RUN razor-admin -create && razor-admin -register
 
-RUN git clone https://github.com/tokuhirom/plenv.git ~/.plenv && \
+RUN cd $HOME && git clone https://github.com/tokuhirom/plenv.git ~/.plenv && \
 git clone https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/
 
-RUN echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> ~/.profile
-ENV PATH="$HOME/.plenv/bin:$PATH"
+RUN echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> $HOME/.profile
 
-RUN echo 'eval "$(plenv init -)"' >> ~/.profile
+RUN echo 'eval "$(plenv init -)"' >> $HOME/.profile
 
 RUN export PATH="$HOME/.plenv/bin:$PATH" && \
     eval "$(plenv init -)" && \
