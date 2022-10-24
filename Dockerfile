@@ -41,7 +41,7 @@ RUN git clone https://github.com/perl-actions/ci-perl-tester-helpers.git --depth
 ENV SA_USER="satester" \
     PATH="/home/satester/bin:$PATH"
 
-RUN useradd -G sudo -m -s /bin/bash "$SA_USER" && \
+RUN useradd -G sudo -u 1001 -m -s /bin/bash "$SA_USER" && \
     sed -i /etc/sudoers -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g' && \
     sed -i /etc/sudoers -re 's/^root.*/root ALL=(ALL:ALL) NOPASSWD: ALL/g' && \
     sed -i /etc/sudoers -re 's/^#includedir.*/## **Removed the include directive** ##"/g' && \
@@ -59,7 +59,7 @@ RUN git clone https://github.com/tokuhirom/plenv.git ~/.plenv && \
 git clone https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/
 
 RUN echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> ~/.profile
-ENV PATH="/home/satester/.plenv/bin:$PATH"
+ENV PATH="$HOME/.plenv/bin:$PATH"
 
 RUN echo 'eval "$(plenv init -)"' >> ~/.profile
 
