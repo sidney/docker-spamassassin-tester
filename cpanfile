@@ -32,10 +32,12 @@ requires 'LWP::UserAgent';
 requires 'Mail::DKIM';
 requires 'Mail::DMARC::PurePerl';
 requires 'Math::Int128';
+requires 'MaxMind::DB::Reader::XS';
 requires 'Net::CIDR::Lite';
 requires 'Net::DNS';
 requires 'Net::DNS::Nameserver';
 requires 'Net::LibIDN';
+requires 'Net::LibIDN2';
 requires 'Net::Patricia';
 requires 'Net::Works::Network';
 requires 'NetAddr::IP';
@@ -53,8 +55,6 @@ requires 'Perl::Critic::Policy::Compatibility::ProhibitThreeArgumentOpen';
 requires 'Perl::Critic::Policy::Lax::ProhibitStringyEval::ExceptForRequire';
 requires 'Perl::Critic::Policy::ValuesAndExpressions::PreventSQLInjection';
 requires 'Perl::Critic::Policy::ControlStructures::ProhibitReturnInDoBlock';
-requires 'Net::LibIDN2';
-requires 'MaxMind::DB::Reader::XS';
 
 if ( "$]" < 5.017 ) {
     requires 'Devel::SawAmpersand';
